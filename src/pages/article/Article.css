@@ -1,0 +1,20 @@
+.article {
+  padding-top: 80px; /* Espaço para a navbar fixa */
+  padding: 80px 20px 20px 20px;
+}
+
+.article__container {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.article h1 {
+  color: #213547;
+  margin-bottom: 16px;
+}
+
+.article p {
+  color: #213547;
+  font-size: 16px;
+  line-height: 1.6;
+}

@@ -1,27 +1,22 @@
 import './Home.css'
 import avatarDefault from '../../assets/Avatar.png'
+import image1 from '../../assets/Image1 home.png'
+import image2 from '../../assets/image 2 home.png'
 
 const mockArticles = [
   {
     id: '1',
-    title: 'Introdução ao React com Vite',
-    image: 'https://picsum.photos/seed/react/640/360',
+    title: 'Inteligência Artificial: O Futuro da Automação e da Transformação Digital',
+    image: image1,
     author: { name: 'Ana Souza', avatar: avatarDefault },
-    date: '2025-10-05',
+    date: '2025-01-15',
   },
   {
     id: '2',
-    title: 'Boas práticas de CSS moderno',
-    image: 'https://picsum.photos/seed/css/640/360',
+    title: 'Computação Quântica: O Próximo Grande Salto para a Tecnologia',
+    image: image2,
     author: { name: 'Bruno Lima', avatar: avatarDefault },
-    date: '2025-10-03',
-  },
-  {
-    id: '3',
-    title: 'Guia rápido de Hooks',
-    image: 'https://picsum.photos/seed/hooks/640/360',
-    author: { name: 'Carla Menezes', avatar: avatarDefault },
-    date: '2025-10-01',
+    date: '2025-01-12',
   },
 ]
 

@@ -1,17 +1,30 @@
 
+.home {
+  padding-top: 80px; /* Espaço para a navbar fixa */
+  padding: 80px 20px 20px 20px;
+}
+
+.home__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 24px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+
 .card {
-   background: transparent;
-   border: none;
-   border-radius: 0;
-   overflow: hidden;
-   padding: 16px 20px 16px 20px;
+  background: transparent;
+  border: none;
+  border-radius: 0;
+  overflow: hidden;
+  padding: 16px 20px 16px 20px;
  }
 
 .card__media {
   width: 100%;
-
-  object-fit: cover;
-
+  height: auto; /* mantém altura original conforme proporção da imagem */
+  display: block;
   border-radius: 12px; 
 }
 .card__title {
