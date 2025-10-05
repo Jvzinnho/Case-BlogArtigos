@@ -22,18 +22,18 @@ const mockArticles = [
 export default function Home() {
   return (
     <main className="home">
-      <section className="home__grid">
+      <section className="home-grid">
         {mockArticles.map((article) => (
           <article className="card" key={article.id}>
-            <a href={`/artigos/${article.id}`} className="card__media-wrap">
-              <img className="card__media" src={article.image} alt={article.title} />
+            <a href={`/artigos/${article.id}`} className="card-media-wrap">
+              <img className="card-media" src={article.image} alt={article.title} />
             </a>
-            <h2 className="card__title">{article.title}</h2>
-            <div className="card__meta">
-              <img className="card__avatar" src={article.author.avatar} alt={article.author.name} width="28" height="28" />
-              <div className="card__byline">
-                <span className="card__author">{article.author.name}</span>
-                <time className="card__date" dateTime={article.date}>{new Date(article.date).toLocaleDateString()}</time>
+            <h2 className="card-title">{article.title}</h2>
+            <div className="card-meta">
+              <img className="card-avatar" src={article.author.avatar} alt={article.author.name} width="28" height="28" />
+              <div className="card-byline">
+                <span className="card-author">{article.author.name}</span>
+                <time className="card-date" dateTime={article.date}>{new Date(article.date).toLocaleDateString()}</time>
               </div>
             </div>
           </article>

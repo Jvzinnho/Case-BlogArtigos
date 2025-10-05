@@ -6,6 +6,7 @@ import Login from './pages/login/Login.jsx'
 import Register from './pages/login/Register.jsx'
 import Recover from './pages/Login/Recover.jsx'
 import Article from './pages/article/Article.jsx'
+import Profile from './pages/profile/profile.jsx'
 
 function AppContent() {
   const location = useLocation()
@@ -20,6 +21,7 @@ function AppContent() {
         <Route path="/login" element={<Login />} />
         <Route path="/registrar" element={<Register />} />
         <Route path="/esqueci-senha" element={<Recover />} />
+        <Route path="/perfil" element={<Profile />} />
       </Routes>
     </>
   )

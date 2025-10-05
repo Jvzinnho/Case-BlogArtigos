@@ -5,10 +5,10 @@
    right: 0;
    font-family: 'Montserrat', sans-serif;
    background: #ffffff;
-
+   z-index: 1000;
  }
- 
- .navbar__inner {
+
+ .navbar-card {
     height: 100%;
     display: flex;
     align-items: center;
@@ -16,30 +16,123 @@
     padding: 16px 20px 16px 20px; 
  }
 
- 
- .navbar__left {
+ .navbar-card-left {
    display: flex;
    gap: 16px;
  }
- 
- .navbar__link {
+
+ .navbar-link {
    color: inherit;
    opacity: 0.9;
  }
- .navbar__link:hover {
+
+ .navbar-link:hover {
    opacity: 1;
  }
- 
- .navbar__right {
+
+ .navbar-card-right {
    display: flex;
    align-items: center;
  }
- 
- .navbar__avatar {
+
+ .navbar-avatar-container {
+   position: relative;
+ }
+
+ .navbar-avatar {
    width: 32px;
    height: 32px;
    border-radius: 50%;
    object-fit: cover;
    border: 1px solid rgba(255, 255, 255, 0.2);
+   transition: opacity 0.2s;
  }
+
+ .navbar-avatar:hover {
+   opacity: 0.8;
+ }
+
+ .navbar-dropdown {
+   position: fixed;
+   top: 0;
+   left: 0;
+   right: 0;
+   bottom: 0;
+   background: #ffffff;
+   z-index: 1001;
+   overflow: hidden;
+ }
+
+ .navbar-dropdown-header {
+   display: flex;
+   align-items: center;
+   justify-content: space-between;
+   padding: 20px;
+   border-bottom: 1px solid #e2e8f0;
+ }
+
+ .navbar-dropdown-logo {
+   width: 32px;
+   height: 32px;
+   object-fit: contain;
+ }
+
+ .navbar-dropdown-close {
+   background: none;
+   border: none;
+   font-size: 18px;
+   color: #64748b;
+   cursor: pointer;
+   padding: 4px;
+   border-radius: 4px;
+   transition: background-color 0.2s;
+ }
+
+ .navbar-dropdown-close:hover {
+   background-color: #f1f5f9;
+ }
+
+ .navbar-dropdown-menu {
+   display: flex;
+   flex-direction: column;
+   padding: 20px;
+   align-items: flex-end;
+   margin-top: 20px;
+ }
+
+ .navbar-dropdown-item {
+   display: block;
+   padding: 15px 30px;
+   color: #213547;
+   text-decoration: none;
+   font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+   font-size: 1rem;
+   font-weight: 500;
+   transition: background-color 0.2s;
+   margin: 8px 0;
+   border-radius: 8px;
+   min-width: 180px;
+   text-align: right;
+ }
+
+ .navbar-dropdown-item:hover {
+   background-color: #f8fafc;
+ }
+
+ .navbar-dropdown-bottom {
+   position: absolute;
+   bottom: 20px;
+   right: 20px;
+ }
+
+ .navbar-dropdown-item--logout {
+   color: #dc2626;
+   font-weight: 600;
+ }
+
+ .navbar-dropdown-item--logout:hover {
+   background-color: #fef2f2;
+   color: #b91c1c;
+ }
+
 

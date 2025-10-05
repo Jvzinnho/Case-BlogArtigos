@@ -52,36 +52,36 @@ export default function Article() {
 
   return (
     <main className="article">
-      <div className="article__container">
-        <h1 className="article__title">Artigos</h1>
-        <div className="article__grid">
+      <div className="article-container">
+        <h1 className="article-title">Artigos</h1>
+        <div className="article-grid">
           {mockArticles.map((article) => (
             <div className="article-item" key={article.id}>
-              <div className="article-item__image">
+              <div className="article-item-image">
                 <img src={article.image} alt={article.title} />
               </div>
-              <div className="article-item__content">
-                <h2 className="article-item__title">{article.title}</h2>
+              <div className="article-item-content">
+                <h2 className="article-item-title">{article.title}</h2>
                 <div 
-                  className="article-item__text"
+                  className="article-item-text"
                   onClick={() => toggleExpansion(article.id)}
                   style={{ cursor: 'pointer' }}
                 >
                   {expandedArticle === article.id ? (
-                    <div className="article-item__full-content">
+                    <div className="article-item-full-content">
                       {article.content.split('\n\n').map((paragraph, index) => (
                         <p key={index}>{paragraph}</p>
                       ))}
                     </div>
                   ) : (
-                    <p className="article-item__preview">{article.preview}</p>
+                    <p className="article-item-preview">{article.preview}</p>
                   )}
                 </div>
-                <div className="article-item__meta">
-                  <img className="article-item__avatar" src={article.author.avatar} alt={article.author.name} width="28" height="28" />
-                  <div className="article-item__byline">
-                    <span className="article-item__author">{article.author.name}</span>
-                    <time className="article-item__date" dateTime={article.date}>{new Date(article.date).toLocaleDateString()}</time>
+                <div className="article-item-meta">
+                  <img className="article-item-avatar" src={article.author.avatar} alt={article.author.name} width="28" height="28" />
+                  <div className="article-item-byline">
+                    <span className="article-item-author">{article.author.name}</span>
+                    <time className="article-item-date" dateTime={article.date}>{new Date(article.date).toLocaleDateString()}</time>
                   </div>
                 </div>
               </div>
