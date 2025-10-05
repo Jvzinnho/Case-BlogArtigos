@@ -6,14 +6,13 @@ import image2 from '../../assets/image 2 home.png'
 const mockArticles = [
   {
     id: '1',
-    title: 'Inteligência Artificial: O Futuro da Automação e da Transformação Digital',
+    title: 'Desvendando o JavaScript: Dicas e Técnicas Essenciais para Desenvolvedores',
     image: image1,
     author: { name: 'Ana Souza', avatar: avatarDefault },
     date: '2025-01-15',
   },
   {
     id: '2',
-    title: 'Computação Quântica: O Próximo Grande Salto para a Tecnologia',
     image: image2,
     author: { name: 'Bruno Lima', avatar: avatarDefault },
     date: '2025-01-12',

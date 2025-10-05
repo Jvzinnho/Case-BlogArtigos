@@ -1,33 +1,36 @@
 import './Register.css'
 import { Link } from 'react-router-dom'
+import arrowImage from '../../assets/arrow.png'
 
 export default function Register() {
   return (
     <main className="auth auth--register">
       <div className="auth__container">
-        <h1 className="auth__title">Criar conta</h1>
+        <div className="auth__header">
+          <Link className="auth__back-arrow" to="/login">
+            <img src={arrowImage} alt="Voltar" width="24" height="24" />
+          </Link>
+          <h1 className="auth__title">Registrar</h1>
+        </div>
+        
         <p className="auth__description">
-          Junte-se a nós e tenha acesso a artigos exclusivos, favoritar e muito mais.
+          Crie sua conta para explorar conteúdos incríveis, seguir autores e participar da comunidade.
         </p>
         
         <form className="auth__form" onSubmit={(e) => e.preventDefault()}>
-          <label className="auth__label">
-            Nome
-            <input className="auth__input" type="text" placeholder="Seu nome" required />
+          <input className="auth__input" type="email" placeholder="Email" required />
+          <input className="auth__input" type="password" placeholder="Senha" required />
+          <input className="auth__input" type="password" placeholder="Confirmar senha" required />
+          
+          <button className="auth__submit" type="submit">Criar conta</button>
+          
+          <label className="auth__checkbox-label">
+            <input className="auth__checkbox" type="checkbox" required />
+            <span className="auth__checkbox-text">
+              Li e concordo com os Termos de Uso e a Política de Privacidade.
+            </span>
           </label>
-          <label className="auth__label">
-            Email
-            <input className="auth__input" type="email" placeholder="seu@email.com" required />
-          </label>
-          <label className="auth__label">
-            Senha
-            <input className="auth__input" type="password" placeholder="••••••••" required />
-          </label>
-          <button className="auth__submit" type="submit">Registrar</button>
         </form>
-        <p className="auth__hint">
-          Já tem conta? <Link className="auth__link" to="/login">Entrar</Link>
-        </p>
       </div>
     </main>
   )

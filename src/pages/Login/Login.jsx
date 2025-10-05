@@ -3,29 +3,25 @@ import { Link } from 'react-router-dom'
 
 export default function Login() {
   return (
-    <main className="auth auth--login">
-      <div className="auth__container">
-        <h1 className="auth__title">Bem-vindo de volta!</h1>
-        <p className="auth__description">
+    <main className="login">
+      <div className="login-container">
+        <h1 className="login-title">Bem-vindo de volta!</h1>
+        <p className="login-description">
           Acesse sua conta para acompanhar artigos exclusivos, favoritar e muito mais.
         </p>
         
-        <form className="auth__form" onSubmit={(e) => e.preventDefault()}>
-          <label className="auth__label">
-            Email
-            <input className="auth__input" type="email" placeholder="seu@email.com" required />
-          </label>
-          <label className="auth__label">
-            Senha
-            <input className="auth__input" type="password" placeholder="••••••••" required />
-          </label>
-          <div className="auth__actions">
-            <Link className="auth__link" to="/esqueci-senha">Esqueci minha senha</Link>
+        <form className="login-form" onSubmit={(e) => e.preventDefault()}>
+            <input className="login-form-input" type="email" placeholder="Email" required />
+      
+            <input className="login-form-input" type="password" placeholder="Senha" required />
+          
+          <div className="login-form-actions">
+            <Link className="login-form-link" to="/esqueci-senha">Esqueci minha senha</Link>
           </div>
-          <button className="auth__submit" type="submit">Entrar</button>
+          <button className="login-form-button" type="submit">Entrar</button>
         </form>
-        <p className="auth__hint">
-          Não tem conta? <Link className="auth__link" to="/registrar">Criar conta</Link>
+        <p className="login-form-hint">
+          Não tem conta? <Link className="login-form-link" to="/registrar">Criar conta</Link>
         </p>
       </div>
     </main>
