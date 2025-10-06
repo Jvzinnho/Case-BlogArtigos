@@ -1,5 +1,6 @@
 import './App.css'
 import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom'
+import { ArticleProvider } from './context/ArticleContext'
 import Navbar from './components/Navbar'
 import Home from './pages/home/Home'
 import Login from './pages/Login/Login'
@@ -8,6 +9,8 @@ import Recover from './pages/Login/Recover'
 import Article from './pages/article/Article'
 import Profile from './pages/profile/Profile'
 import NewArticle from './pages/newArticle/NewArticle'
+import MyArticle from './pages/myArticle/MyArticle'
+import ArticleView from './pages/articleView/ArticleView'
 
 function AppContent() {
   const location = useLocation()
@@ -24,6 +27,9 @@ function AppContent() {
         <Route path="/esqueci-senha" element={<Recover />} />
         <Route path="/perfil" element={<Profile />} />
         <Route path="/criar-artigo" element={<NewArticle />} />
+        <Route path="/meus-artigos" element={<MyArticle />} />
+        <Route path="/new-article" element={<NewArticle />} />
+        <Route path="/article/:id" element={<ArticleView />} />
       </Routes>
     </>
   )
@@ -31,9 +37,11 @@ function AppContent() {
 
 function App() {
   return (
-    <Router>
-      <AppContent />
-    </Router>
+    <ArticleProvider>
+      <Router>
+        <AppContent />
+      </Router>
+    </ArticleProvider>
   )
 }
 

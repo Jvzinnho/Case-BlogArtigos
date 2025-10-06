@@ -1,31 +1,80 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { useArticles, Article } from '../../context/ArticleContext';
 import './NewArticle.css';
 
 const NewArticle = () => {
+  const location = useLocation();
+  const navigate = useNavigate();
+  const { addArticle, updateArticle } = useArticles();
+  const [editMode, setEditMode] = useState(false);
+  const [articleId, setArticleId] = useState<string | null>(null);
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
   const [imageFile, setImageFile] = useState<File | null>(null);
-  const [imageName, setImageName] = useState('');
   const [imageNameInput, setImageNameInput] = useState('');
+  const [imageUrl, setImageUrl] = useState('');
+
+  // Verificar se está em modo de edição
+  useEffect(() => {
+    if (location.state) {
+      const { editMode: isEditMode, articleData } = location.state as { 
+        editMode: boolean; 
+        articleData: Article 
+      };
+      
+      if (isEditMode && articleData) {
+        setEditMode(true);
+        setArticleId(articleData.id);
+        setTitle(articleData.title);
+        setContent(articleData.content);
+        setImageNameInput(articleData.image);
+        setImageUrl(articleData.image);
+      }
+    }
+  }, [location.state]);
 
   const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
       setImageFile(file);
-      setImageName(file.name);
       setImageNameInput(file.name);
     }
   };
 
   const handleSave = () => {
-    // Aqui você pode implementar a lógica para salvar o artigo
-    console.log('Salvando artigo:', { title, content, imageFile });
+    if (!title.trim() || !content.trim()) {
+      alert('Por favor, preencha o título e o conteúdo do artigo.');
+      return;
+    }
+
+    const imageToUse = imageFile ? URL.createObjectURL(imageFile) : imageUrl;
+
+    if (editMode && articleId) {
+      // Atualizar artigo existente
+      updateArticle(articleId, {
+        title: title.trim(),
+        content: content.trim(),
+        image: imageToUse
+      });
+      navigate('/meus-artigos');
+    } else {
+      // Criar novo artigo
+      addArticle({
+        title: title.trim(),
+        content: content.trim(),
+        image: imageToUse
+      });
+      navigate('/meus-artigos');
+    }
   };
 
   return (
     <div className="new-article">
       <div className="new-article-container">
-        <div className="new-article-title">Editar Artigo</div>
+        <div className="new-article-title">
+          {editMode ? 'Editar Artigo' : 'Criar Novo Artigo'}
+        </div>
         
         <div className="banner-section">
           <div className="banner-image-container">
@@ -42,6 +91,14 @@ const NewArticle = () => {
                   <div className="image-preview">
                     <img 
                       src={URL.createObjectURL(imageFile)} 
+                      alt="Preview" 
+                      className="preview-image"
+                    />
+                  </div>
+                ) : imageUrl ? (
+                  <div className="image-preview">
+                    <img 
+                      src={imageUrl} 
                       alt="Preview" 
                       className="preview-image"
                     />
@@ -101,7 +158,7 @@ const NewArticle = () => {
               className="save-button"
               onClick={handleSave}
             >
-              Salvar
+              {editMode ? 'Atualizar' : 'Salvar'}
             </button>
           </div>
         </div>

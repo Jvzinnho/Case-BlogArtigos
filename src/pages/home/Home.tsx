@@ -1,39 +1,42 @@
+import { useNavigate } from 'react-router-dom';
+import { useArticles } from '../../context/ArticleContext';
 import './Home.css'
 import avatarDefault from '../../assets/Avatar.png'
-import image1 from '../../assets/Image1 home.png'
-import image2 from '../../assets/image 2 home.png'
-
-const mockArticles = [
-  {
-    id: '1',
-    title: 'Desvendando o JavaScript: Dicas e Técnicas Essenciais para Desenvolvedores',
-    image: image1,
-    author: { name: 'Ana Souza', avatar: avatarDefault },
-    date: '2025-01-15',
-  },
-  {
-    id: '2',
-    image: image2,
-    author: { name: 'Bruno Lima', avatar: avatarDefault },
-    date: '2025-01-12',
-  },
-]
 
 export default function Home() {
+  const { articles } = useArticles();
+  const navigate = useNavigate();
+
+  // Mostrar apenas os 2 primeiros artigos na home
+  const homeArticles = articles.slice(0, 2);
+
+  const handleArticleClick = (articleId: string) => {
+    const article = articles.find(a => a.id === articleId);
+    if (article) {
+      navigate(`/article/${articleId}`, { state: { article } });
+    }
+  };
+
   return (
     <main className="home">
       <section className="home-grid">
-        {mockArticles.map((article) => (
+        {homeArticles.map((article) => (
           <article className="home-card" key={article.id}>
-            <a href={`/artigos/${article.id}`} className="home-card-media-wrap">
+            <div 
+              className="home-card-media-wrap"
+              onClick={() => handleArticleClick(article.id)}
+              style={{ cursor: 'pointer' }}
+            >
               <img className="home-card-media" src={article.image} alt={article.title} />
-            </a>
-            <h2 className="home-card-title">{article.title}</h2>
+            </div>
+            <h2 className="home-card-title" onClick={() => handleArticleClick(article.id)} style={{ cursor: 'pointer' }}>
+              {article.title}
+            </h2>
             <div className="home-card-meta">
-              <img className="home-card-avatar" src={article.author.avatar} alt={article.author.name} width="28" height="28" />
+              <img className="home-card-avatar" src={avatarDefault} alt="Autor" width="28" height="28" />
               <div className="home-card-byline">
-                <span className="home-card-author">{article.author.name}</span>
-                <time className="home-card-date" dateTime={article.date}>{new Date(article.date).toLocaleDateString()}</time>
+                <span className="home-card-author">Autor</span>
+                <time className="home-card-date">{article.createdAt}</time>
               </div>
             </div>
           </article>

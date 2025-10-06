@@ -56,7 +56,9 @@
   font-weight: 500;
   font-family: Inter;
   background: #ffffff;
-
+  width: 100%;
+  box-sizing: border-box;
+  cursor: pointer;
 }
 
 .new-article-form {
@@ -84,8 +86,7 @@
   font-size: 16px;
   font-style: medium;
   font-weight: 500;
-  color: #374151;
-  margin: 0;
+  color: #374151;  
 }
 
 .form-input-small {
@@ -97,6 +98,8 @@
   font-weight: 500;
   font-family: Inter;
   background: #ffffff;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .form-input-small:focus {
@@ -114,7 +117,9 @@
   font-family: Inter;
   background: #ffffff;
   resize: vertical;
-
+  min-height: 500px;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .form-textarea:focus {

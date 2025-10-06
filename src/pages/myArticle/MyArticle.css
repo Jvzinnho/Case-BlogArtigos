@@ -1,0 +1,389 @@
+.my-articles {
+  min-height: 100vh;
+  padding: 80px 20px 40px 20px;
+  background: #ffffff;
+}
+
+.my-articles-container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.my-articles-title {
+  font-family: Inter;
+  font-size: 12px;
+  font-weight: 600;
+  color: #213547;
+  margin: 0 0 40px 0;
+}
+
+.articles-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.article-card {
+  background: transparent;
+  border-bottom: 1px solid #e5e7eb;
+  padding: 24px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  transition: background-color 0.2s;
+  min-height: 120px;
+}
+
+.article-card:hover {
+  background-color: #f9fafb;
+}
+
+.article-card:last-child {
+  border-bottom: none;
+}
+
+.article-content {
+  display: flex;
+  gap: 20px;
+  flex: 1;
+}
+
+.article-image {
+  flex-shrink: 0;
+  width: 100px;
+  height: 100px;
+  border-radius: 4px;
+  overflow: hidden;
+  background: #f3f4f6;
+}
+
+.article-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.article-info {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  padding-top: 10px;
+}
+
+.article-title {
+  font-family: Inter;
+  font-size: 18px;
+  font-weight: 500;
+  color: #213547;
+  margin: 0;
+  line-height: 1.4;
+}
+
+.article-bottom-section {
+  display: flex;
+  justify-content: space-between;
+  
+  width: 100%;
+
+}
+
+.article-dates {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 1;
+  margin: 0;
+}
+
+.likes-section {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin: 0;
+}
+
+.article-actions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.heart-icon {
+  color: #ef4444;
+  font-size: 14px;
+}
+
+.likes-count {
+  font-family: Inter;
+  font-size: 14px;
+  font-weight: 500;
+  color: #374151;
+}
+
+.date-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+}
+
+.date-label {
+  font-family: Inter;
+  font-size: 14px;
+  font-weight: 500;
+  color: #6b7280;
+}
+
+.date-value {
+  font-family: Inter;
+  font-size: 14px;
+  font-weight: 400;
+  color: #374151;
+}
+
+.article-actions {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+  margin: 0;
+}
+
+.action-button {
+  height: 55px;
+  border: none;
+  border-radius: 0;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  padding: 0;
+}
+
+.edit-button {
+  width: 70px;
+}
+
+.delete-button {
+  width: 55px;
+}
+
+.action-button img {
+  width: 24px;
+  height: 24px;
+}
+
+/* Mobile Styles */
+.mobile-bottom-section {
+  display: none;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+  .my-articles {
+    padding: 80px 16px 20px 16px;
+  }
+  
+  .article-card {
+    flex-direction: column;
+    gap: 12px;
+  }
+  
+  .article-content {
+    flex-direction: row;
+    gap: 16px;
+    align-items: flex-start;
+  }
+  
+  .article-image {
+    width: 80px;
+    height: 80px;
+    flex-shrink: 0;
+  }
+  
+  .article-info {
+    align-items: center;
+    flex: 1;
+  }
+  
+  .article-actions {
+    display: flex;
+  }
+  
+  .article-dates {
+    display: flex;
+  }
+  
+  .article-title {
+    font-size: 16px;
+  }
+  
+  .date-label {
+    font-size: 12px;
+  }
+  
+  .date-value {
+    font-size: 12px;
+  }
+  
+  .likes-count {
+    font-size: 12px;
+  }
+  
+  .heart-icon {
+    font-size: 12px;
+  }
+  
+  .article-bottom-section {
+    flex-wrap: wrap;
+    gap: 12px;
+    align-items: flex-start;
+  }
+  
+  .article-dates {
+    flex: 1;
+    min-width: 100px;
+    gap: 2px;
+  }
+  
+  .likes-section {
+    margin: 0;
+  }
+  
+  .article-actions {
+    gap: 3px;
+  }
+  
+  .action-button {
+    height: 50px;
+    border-radius: 0;
+    background: transparent;
+    padding: 0;
+  }
+  
+  .edit-button {
+    width: 65px;
+  }
+  
+  .delete-button {
+    width: 50px;
+  }
+  
+  .action-button img {
+    width: 22px;
+    height: 22px;
+  }
+  
+  .mobile-bottom-section {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    width: 100%;
+    margin-top: 12px;
+  }
+  
+  .mobile-dates {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    order: 1;
+    width: 80px;
+  }
+  
+  .mobile-actions {
+    display: flex;
+    gap: 16px;
+    order: 2;
+  }
+  
+  .mobile-action-button {
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.2s;
+  }
+  
+  .mobile-action-button.delete-button {
+    width: 48px;
+    height: 48px;
+  }
+  
+  .mobile-action-button.edit-button {
+    width: 56px;
+    height: 56px;
+  }
+  
+  .mobile-action-button.edit-button {
+    background: transparent;
+  }
+  
+  .mobile-action-button.edit-button:hover {
+    background: #f3f4f6;
+  }
+  
+  .mobile-action-button.delete-button {
+    background: transparent;
+  }
+  
+  .mobile-action-button.delete-button:hover {
+    background: #fef2f2;
+  }
+  
+  .mobile-action-button img {
+    width: 24px;
+    height: 24px;
+  }
+}
+
+@media (max-width: 480px) {
+  .my-articles-title {
+    font-size: 12px;
+  }
+  
+  .article-title {
+    font-size: 14px;
+  }
+  
+  .article-card {
+    padding: 16px 0;
+  }
+  
+  .date-label {
+    font-size: 11px;
+  }
+  
+  .date-value {
+    font-size: 11px;
+  }
+  
+  .likes-count {
+    font-size: 11px;
+  }
+  
+  .heart-icon {
+    font-size: 11px;
+  }
+  
+  .action-button {
+    height: 45px;
+    border-radius: 0;
+    background: transparent;
+    padding: 0;
+  }
+  
+  .edit-button {
+    width: 60px;
+  }
+  
+  .delete-button {
+    width: 45px;
+  }
+  
+  .action-button img {
+    width: 20px;
+    height: 20px;
+  }
+}
