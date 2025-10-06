@@ -24,16 +24,16 @@ export default function Home() {
     <main className="home">
       <section className="home-grid">
         {mockArticles.map((article) => (
-          <article className="card" key={article.id}>
-            <a href={`/artigos/${article.id}`} className="card-media-wrap">
-              <img className="card-media" src={article.image} alt={article.title} />
+          <article className="home-card" key={article.id}>
+            <a href={`/artigos/${article.id}`} className="home-card-media-wrap">
+              <img className="home-card-media" src={article.image} alt={article.title} />
             </a>
-            <h2 className="card-title">{article.title}</h2>
-            <div className="card-meta">
-              <img className="card-avatar" src={article.author.avatar} alt={article.author.name} width="28" height="28" />
-              <div className="card-byline">
-                <span className="card-author">{article.author.name}</span>
-                <time className="card-date" dateTime={article.date}>{new Date(article.date).toLocaleDateString()}</time>
+            <h2 className="home-card-title">{article.title}</h2>
+            <div className="home-card-meta">
+              <img className="home-card-avatar" src={article.author.avatar} alt={article.author.name} width="28" height="28" />
+              <div className="home-card-byline">
+                <span className="home-card-author">{article.author.name}</span>
+                <time className="home-card-date" dateTime={article.date}>{new Date(article.date).toLocaleDateString()}</time>
               </div>
             </div>
           </article>

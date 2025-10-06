@@ -1,12 +1,13 @@
 import './App.css'
 import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom'
-import Navbar from './components/Navbar.jsx'
-import Home from './pages/home/Home.jsx'
-import Login from './pages/login/Login.jsx'
-import Register from './pages/login/Register.jsx'
-import Recover from './pages/Login/Recover.jsx'
-import Article from './pages/article/Article.jsx'
-import Profile from './pages/profile/profile.jsx'
+import Navbar from './components/Navbar'
+import Home from './pages/home/Home'
+import Login from './pages/Login/Login'
+import Register from './pages/Login/Register'
+import Recover from './pages/Login/Recover'
+import Article from './pages/article/Article'
+import Profile from './pages/profile/Profile'
+import NewArticle from './pages/newArticle/NewArticle'
 
 function AppContent() {
   const location = useLocation()
@@ -22,6 +23,7 @@ function AppContent() {
         <Route path="/registrar" element={<Register />} />
         <Route path="/esqueci-senha" element={<Recover />} />
         <Route path="/perfil" element={<Profile />} />
+        <Route path="/criar-artigo" element={<NewArticle />} />
       </Routes>
     </>
   )

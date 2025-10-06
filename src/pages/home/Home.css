@@ -13,7 +13,7 @@
 }
 
 
-.card {
+.home-card {
   background: transparent;
   border: none;
   border-radius: 0;
@@ -21,13 +21,13 @@
   padding: 16px 20px 16px 20px;
  }
 
-.card-media {
+.home-card-media {
   width: 100%;
   height: auto; /* mantém altura original conforme proporção da imagem */
   display: block;
   border-radius: 12px; 
 }
-.card-title {
+.home-card-title {
   font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
   font-size: 18px;
   font-weight: 600;
@@ -35,20 +35,20 @@
   margin: 12px 2px 8px 2px; 
   text-align: left;          
 }
- .card-meta {
+ .home-card-meta {
    display: flex;
   align-items: center;
    gap: 10px;
  }
- .card-avatar {
+ .home-card-avatar {
    width: 32px;
    height: 32px;
    border-radius: 50%;
    object-fit: cover;
  }
 
-.card-byline { display: flex; flex-direction: row; align-items: baseline; gap: 8px; }
-.card-author { font-family: Montserrat, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif; font-weight: 600; font-size: 14px; }
-.card-date { font-family: Montserrat, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif; opacity: 0.75; font-size: 12.5px; }
+.home-card-byline { display: flex; flex-direction: row; align-items: baseline; gap: 8px; }
+.home-card-author { font-family: Montserrat, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif; font-weight: 600; font-size: 14px; }
+.home-card-date { font-family: Montserrat, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif; opacity: 0.75; font-size: 12.5px; }
 
 

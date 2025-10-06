@@ -44,16 +44,15 @@ O futuro da computação quântica não está distante. Especialistas preveem qu
 ]
 
 export default function Article() {
-  const [expandedArticle, setExpandedArticle] = useState(null)
+  const [expandedArticle, setExpandedArticle] = useState<string | null>(null)
 
-  const toggleExpansion = (articleId) => {
+  const toggleExpansion = (articleId: string) => {
     setExpandedArticle(expandedArticle === articleId ? null : articleId)
   }
 
   return (
     <main className="article">
       <div className="article-container">
-        <h1 className="article-title">Artigos</h1>
         <div className="article-grid">
           {mockArticles.map((article) => (
             <div className="article-item" key={article.id}>
