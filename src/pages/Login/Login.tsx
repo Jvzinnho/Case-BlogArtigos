@@ -1,7 +1,35 @@
 import './Login.css'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
+import { useState } from 'react'
+import { useAuth } from '../../context/AuthContext'
 
 export default function Login() {
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+  const [isLoading, setIsLoading] = useState(false)
+  const [error, setError] = useState('')
+  const navigate = useNavigate()
+  const { login } = useAuth()
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    setIsLoading(true)
+    setError('')
+
+    try {
+      const success = await login(email, password)
+      if (success) {
+        navigate('/')
+      } else {
+        setError('Email ou senha incorretos')
+      }
+    } catch (err) {
+      setError('Erro ao fazer login. Tente novamente.')
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
   return (
     <main className="login">
       <div className="login-container">
@@ -10,19 +38,52 @@ export default function Login() {
           Acesse sua conta para acompanhar artigos exclusivos, favoritar e muito mais.
         </p>
         
-        <form className="login-form" onSubmit={(e) => e.preventDefault()}>
-            <input className="login-form-input" type="email" placeholder="Email" required />
+        <form className="login-form" onSubmit={handleSubmit}>
+            <input 
+              className="login-form-input" 
+              type="email" 
+              placeholder="Email" 
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required 
+            />
       
-            <input className="login-form-input" type="password" placeholder="Senha" required />
+            <input 
+              className="login-form-input" 
+              type="password" 
+              placeholder="Senha" 
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required 
+            />
           
           <div className="login-form-actions">
             <Link className="login-form-link" to="/esqueci-senha">Esqueci minha senha</Link>
           </div>
-          <button className="login-form-button" type="submit">Entrar</button>
+          
+          {error && (
+            <div style={{ color: 'red', fontSize: '0.875rem', textAlign: 'center' }}>
+              {error}
+            </div>
+          )}
+          
+          <button 
+            className="login-form-button" 
+            type="submit"
+            disabled={isLoading}
+          >
+            {isLoading ? 'Entrando...' : 'Entrar'}
+          </button>
         </form>
         <p className="login-form-hint">
           Não tem conta? <Link className="login-form-link" to="/registrar">Criar conta</Link>
         </p>
+        
+        <div style={{ marginTop: '20px', padding: '10px', backgroundColor: '#f0f0f0', borderRadius: '8px', fontSize: '0.875rem' }}>
+          <strong>Para teste:</strong><br />
+          Email: teste@teste.com<br />
+          Senha: 123456
+        </div>
       </div>
     </main>
   )

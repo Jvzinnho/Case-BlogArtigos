@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useArticles, Article } from '../../context/ArticleContext';
+import { useAuth } from '../../context/AuthContext';
 import './NewArticle.css';
 
 const NewArticle = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const { addArticle, updateArticle } = useArticles();
+  const { user } = useAuth();
   const [editMode, setEditMode] = useState(false);
   const [articleId, setArticleId] = useState<string | null>(null);
   const [title, setTitle] = useState('');
@@ -60,10 +62,17 @@ const NewArticle = () => {
       navigate('/meus-artigos');
     } else {
       // Criar novo artigo
+      if (!user) {
+        alert('Você precisa estar logado para criar um artigo.');
+        navigate('/login');
+        return;
+      }
+      
       addArticle({
         title: title.trim(),
         content: content.trim(),
-        image: imageToUse
+        image: imageToUse,
+        authorId: user.id
       });
       navigate('/meus-artigos');
     }

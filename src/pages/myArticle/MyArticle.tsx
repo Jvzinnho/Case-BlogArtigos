@@ -1,13 +1,18 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useArticles, Article } from '../../context/ArticleContext';
+import { useAuth } from '../../context/AuthContext';
 import './MyArticle.css';
 import deleteIcon from '../../assets/delete button.png';
 import editIcon from '../../assets/edit button.png';
 
 const MyArticle: React.FC = () => {
   const navigate = useNavigate();
-  const { articles, deleteArticle } = useArticles();
+  const { getUserArticles, deleteArticle } = useArticles();
+  const { user } = useAuth();
+  
+  // Pegar apenas os artigos do usuário logado
+  const userArticles = user ? getUserArticles(user.id) : [];
 
   const handleEdit = (article: Article) => {
     // Navegar para a página de edição com os dados do artigo
@@ -35,7 +40,26 @@ const MyArticle: React.FC = () => {
         <h1 className="my-articles-title">Meus Artigos</h1>
         
         <div className="articles-list">
-          {articles.map((article) => (
+          {userArticles.length === 0 ? (
+            <div style={{ textAlign: 'center', padding: '40px', color: '#64748b' }}>
+              <p>Você ainda não criou nenhum artigo.</p>
+              <button 
+                onClick={() => navigate('/criar-artigo')}
+                style={{
+                  marginTop: '16px',
+                  padding: '12px 24px',
+                  backgroundColor: '#000',
+                  color: '#fff',
+                  border: 'none',
+                  borderRadius: '8px',
+                  cursor: 'pointer'
+                }}
+              >
+                Criar Primeiro Artigo
+              </button>
+            </div>
+          ) : (
+            userArticles.map((article) => (
             <div key={article.id} className="article-card">
               <div className="article-content" onClick={() => handleArticleClick(article)} style={{ cursor: 'pointer' }}>
                 <div className="article-image">
@@ -97,7 +121,8 @@ const MyArticle: React.FC = () => {
                 </div>
               </div>
             </div>
-          ))}
+            ))
+          )}
         </div>
       </div>
     </div>

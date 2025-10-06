@@ -10,6 +10,7 @@ export interface Article {
   modifiedAt: string;
   likes: number;
   content: string;
+  authorId: string;
 }
 
 interface ArticleContextType {
@@ -18,6 +19,7 @@ interface ArticleContextType {
   updateArticle: (id: string, article: Partial<Article>) => void;
   deleteArticle: (id: string) => void;
   getArticleById: (id: string) => Article | undefined;
+  getUserArticles: (authorId: string) => Article[];
 }
 
 const ArticleContext = createContext<ArticleContextType | undefined>(undefined);
@@ -31,7 +33,8 @@ const initialArticles: Article[] = [
     createdAt: 'Janeiro 15, 2025',
     modifiedAt: 'Janeiro 20, 2025',
     likes: 16,
-    content: 'JavaScript é uma das linguagens de programação mais populares do mundo. Neste artigo, exploraremos técnicas avançadas que todo desenvolvedor deveria conhecer. Desde closures até async/await, vamos desvendar os segredos que fazem do JavaScript uma linguagem tão poderosa e flexível.'
+    content: 'JavaScript é uma das linguagens de programação mais populares do mundo. Neste artigo, exploraremos técnicas avançadas que todo desenvolvedor deveria conhecer. Desde closures até async/await, vamos desvendar os segredos que fazem do JavaScript uma linguagem tão poderosa e flexível.',
+    authorId: 'admin'
   },
   {
     id: '2',
@@ -40,7 +43,8 @@ const initialArticles: Article[] = [
     createdAt: 'Janeiro 12, 2025',
     modifiedAt: 'Janeiro 18, 2025',
     likes: 12,
-    content: 'TypeScript representa uma evolução natural do JavaScript, adicionando tipagem estática e ferramentas de desenvolvimento mais robustas. Descubra como TypeScript pode transformar sua experiência de desenvolvimento, oferecendo melhor IntelliSense, detecção precoce de erros e código mais maintível.'
+    content: 'TypeScript representa uma evolução natural do JavaScript, adicionando tipagem estática e ferramentas de desenvolvimento mais robustas. Descubra como TypeScript pode transformar sua experiência de desenvolvimento, oferecendo melhor IntelliSense, detecção precoce de erros e código mais maintível.',
+    authorId: 'admin'
   }
 ];
 
@@ -90,13 +94,18 @@ export const ArticleProvider: React.FC<{ children: ReactNode }> = ({ children })
     return articles.find(article => article.id === id);
   };
 
+  const getUserArticles = (authorId: string) => {
+    return articles.filter(article => article.authorId === authorId);
+  };
+
   return (
     <ArticleContext.Provider value={{
       articles,
       addArticle,
       updateArticle,
       deleteArticle,
-      getArticleById
+      getArticleById,
+      getUserArticles
     }}>
       {children}
     </ArticleContext.Provider>
