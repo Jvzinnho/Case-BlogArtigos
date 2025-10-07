@@ -78,12 +78,6 @@ export default function Login() {
         <p className="login-form-hint">
           Não tem conta? <Link className="login-form-link" to="/registrar">Criar conta</Link>
         </p>
-        
-        <div style={{ marginTop: '20px', padding: '10px', backgroundColor: '#f0f0f0', borderRadius: '8px', fontSize: '0.875rem' }}>
-          <strong>Para teste:</strong><br />
-          Email: teste@teste.com<br />
-          Senha: 123456
-        </div>
       </div>
     </main>
   )

@@ -3,8 +3,6 @@ import { useNavigate } from 'react-router-dom';
 import { useArticles, Article } from '../../context/ArticleContext';
 import { useAuth } from '../../context/AuthContext';
 import './MyArticle.css';
-import deleteIcon from '../../assets/delete button.png';
-import editIcon from '../../assets/edit button.png';
 
 const MyArticle: React.FC = () => {
   const navigate = useNavigate();
@@ -108,14 +106,7 @@ const MyArticle: React.FC = () => {
                     onClick={() => handleDeleteClick(article)}
                     title="Deletar artigo"
                   >
-                    <img 
-                      src={deleteIcon} 
-                      alt="Deletar" 
-                      onError={(e) => {
-                        console.log('Erro ao carregar ícone delete:', deleteIcon);
-                        e.currentTarget.style.display = 'none';
-                      }}
-                    />
+                    🗑️
                   </button>
                   
                   <button 
@@ -123,14 +114,7 @@ const MyArticle: React.FC = () => {
                     onClick={() => handleEdit(article)}
                     title="Editar artigo"
                   >
-                    <img 
-                      src={editIcon} 
-                      alt="Editar" 
-                      onError={(e) => {
-                        console.log('Erro ao carregar ícone edit:', editIcon);
-                        e.currentTarget.style.display = 'none';
-                      }}
-                    />
+                    ✏️
                   </button>
                 </div>
               </div>
