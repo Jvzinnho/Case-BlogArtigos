@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useArticles, Article } from '../../context/ArticleContext';
 import { useAuth } from '../../context/AuthContext';
@@ -10,6 +10,8 @@ const MyArticle: React.FC = () => {
   const navigate = useNavigate();
   const { getUserArticles, deleteArticle } = useArticles();
   const { user } = useAuth();
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [articleToDelete, setArticleToDelete] = useState<Article | null>(null);
   
   // Pegar apenas os artigos do usuário logado
   const userArticles = user ? getUserArticles(user.id) : [];
@@ -24,10 +26,22 @@ const MyArticle: React.FC = () => {
     });
   };
 
-  const handleDelete = (articleId: string) => {
-    if (window.confirm('Tem certeza que deseja deletar este artigo?')) {
-      deleteArticle(articleId);
+  const handleDeleteClick = (article: Article) => {
+    setArticleToDelete(article);
+    setShowDeleteModal(true);
+  };
+
+  const handleConfirmDelete = () => {
+    if (articleToDelete) {
+      deleteArticle(articleToDelete.id);
+      setShowDeleteModal(false);
+      setArticleToDelete(null);
     }
+  };
+
+  const handleCancelDelete = () => {
+    setShowDeleteModal(false);
+    setArticleToDelete(null);
   };
 
   const handleArticleClick = (article: Article) => {
@@ -91,7 +105,7 @@ const MyArticle: React.FC = () => {
                 <div className="article-actions">
                   <button 
                     className="action-button delete-button"
-                    onClick={() => handleDelete(article.id)}
+                    onClick={() => handleDeleteClick(article)}
                     title="Deletar artigo"
                   >
                     <img 
@@ -125,6 +139,48 @@ const MyArticle: React.FC = () => {
           )}
         </div>
       </div>
+
+      {/* Modal de Confirmação de Exclusão */}
+      {showDeleteModal && articleToDelete && (
+        <div className="delete-modal-overlay">
+          <div className="delete-modal">
+            <h2 className="delete-modal-title">Excluir Artigo?</h2>
+            
+            <div className="article-preview-card">
+              <h3 className="article-preview-title">{articleToDelete.title}</h3>
+              <div className="article-preview-dates">
+                <div className="preview-date-item">
+                  <span className="preview-date-label">Criado em:</span>
+                  <span className="preview-date-value">{articleToDelete.createdAt}</span>
+                </div>
+                <div className="preview-date-item">
+                  <span className="preview-date-label">Alterado em:</span>
+                  <span className="preview-date-value">{articleToDelete.modifiedAt}</span>
+                </div>
+              </div>
+            </div>
+            
+            <p className="delete-confirmation-text">
+              Tem certeza de que deseja excluir este artigo? Esta ação não poderá ser desfeita.
+            </p>
+            
+            <div className="delete-modal-buttons">
+              <button 
+                className="cancel-button"
+                onClick={handleCancelDelete}
+              >
+                Cancelar
+              </button>
+              <button 
+                className="confirm-delete-button"
+                onClick={handleConfirmDelete}
+              >
+                Excluir
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
