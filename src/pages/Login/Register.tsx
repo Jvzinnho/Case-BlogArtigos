@@ -5,6 +5,7 @@ import { useAuth } from '../../context/AuthContext'
 import arrowImage from '../../assets/arrow.png'
 
 export default function Register() {
+  const [name, setName] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
@@ -39,7 +40,7 @@ export default function Register() {
 
     try {
 
-      const success = await register(email, password)
+      const success = await register(name, email, password)
       if (success) {
         navigate('/')
       } else {

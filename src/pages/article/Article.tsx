@@ -22,7 +22,7 @@ export default function Article() {
     }
 
     loadData()
-  }, []) // Array vazio para executar apenas uma vez
+  }, []) 
 
   const toggleExpansion = (articleId: string) => {
     setExpandedArticle(expandedArticle === articleId ? null : articleId)

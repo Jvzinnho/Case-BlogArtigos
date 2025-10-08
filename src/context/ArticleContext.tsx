@@ -81,7 +81,7 @@ const convertApiArticleToFrontend = (apiArticle: ApiArticle): Article => {
           day: 'numeric'
         })
       : undefined,
-    likes: 0 // API não tem likes ainda
+    likes: 0 
   };
 };
 
@@ -262,6 +262,7 @@ export const ArticleProvider: React.FC<{ children: ReactNode }> = ({ children })
   );
 };
 
+
 export const useArticles = () => {
   const context = useContext(ArticleContext);
   if (context === undefined) {
@@ -269,3 +270,4 @@ export const useArticles = () => {
   }
   return context;
 };
+

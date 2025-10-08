@@ -20,7 +20,7 @@ const MyArticle: React.FC = () => {
         setUserArticles(getUserArticles(user.id));
       });
     }
-  }, [user?.id]); // Apenas user.id como dependência
+  }, [user?.id]); 
 
   const handleEdit = (article: Article) => {
 
