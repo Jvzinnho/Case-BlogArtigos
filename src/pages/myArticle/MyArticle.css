@@ -181,12 +181,12 @@
   background: #dc2626;
 }
 
-/* Mobile Styles */
+
 .mobile-bottom-section {
   display: none;
 }
 
-/* Responsividade */
+
 @media (max-width: 768px) {
   .my-articles {
     padding: 80px 16px 20px 16px;
@@ -408,7 +408,7 @@
   }
 }
 
-/* Modal de Confirmação de Exclusão */
+
 .delete-modal-overlay {
   position: fixed;
   top: 0;
@@ -542,7 +542,7 @@
   background: #dc2626;
 }
 
-/* Responsividade do Modal */
+
 @media (max-width: 768px) {
   .delete-modal-overlay {
     align-items: flex-start;

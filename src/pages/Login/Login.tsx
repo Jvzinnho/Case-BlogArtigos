@@ -1,6 +1,6 @@
 import './Login.css'
 import { Link, useNavigate } from 'react-router-dom'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useAuth } from '../../context/AuthContext'
 
 export default function Login() {
@@ -10,6 +10,13 @@ export default function Login() {
   const [error, setError] = useState('')
   const navigate = useNavigate()
   const { login } = useAuth()
+
+  useEffect(() => {
+    const token = localStorage.getItem('token')
+    if (token) {
+      navigate('/')
+    }
+  }, [navigate])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()

@@ -131,7 +131,7 @@
   flex: 1;
 }
 
-/* Responsividade */
+
 @media (max-width: 768px) {
   .register {
     align-items: flex-start;

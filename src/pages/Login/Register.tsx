@@ -8,7 +8,6 @@ export default function Register() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
-  const [name, setName] = useState('')
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState('')
   const [termsAccepted, setTermsAccepted] = useState(false)
@@ -39,7 +38,8 @@ export default function Register() {
     }
 
     try {
-      const success = await register(email, password, name)
+
+      const success = await register(email, password)
       if (success) {
         navigate('/')
       } else {
@@ -63,18 +63,10 @@ export default function Register() {
         </div>
         
         <p className="register-description">
-          Crie sua conta para explorar conteúdos incríveis, seguir autores e participar da comunidade.
+          Crie sua conta para explorar conteúdos incríveis, seguir autores e participar da comunidade. Você poderá completar seu perfil depois.
         </p>
         
         <form className="register-form" onSubmit={handleSubmit}>
-          <input 
-            className="register-input" 
-            type="text" 
-            placeholder="Nome completo" 
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            required 
-          />
           <input 
             className="register-input" 
             type="email" 

@@ -2,6 +2,7 @@ import React from 'react';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { useArticles, Article } from '../../context/ArticleContext';
 import './ArticleView.css';
+import { formatImageUrl } from '../../utils/FormatImageUrl';
 
 const ArticleView: React.FC = () => {
   const location = useLocation();
@@ -9,7 +10,7 @@ const ArticleView: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const { getArticleById } = useArticles();
   
-  // Tentar obter o artigo do state primeiro, senão buscar pelo ID
+
   const article = location.state?.article as Article || (id ? getArticleById(id) : undefined);
 
   if (!article) {
@@ -32,7 +33,7 @@ const ArticleView: React.FC = () => {
         
         <div className="article-item">
           <div className="article-item-image">
-            <img src={article.image} alt={article.title} />
+            <img src={formatImageUrl(article.banner_url || '')} alt={article.title} />
           </div>
           <div className="article-item-meta">
             <img className="article-item-avatar" src="/src/assets/Avatar.png" alt="Autor" width="28" height="28" />

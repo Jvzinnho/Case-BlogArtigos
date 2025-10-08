@@ -55,13 +55,15 @@ function AppContent() {
 
 function App() {
   return (
-    <AuthProvider>
-      <ArticleProvider>
-        <Router>
-          <AppContent />
-        </Router>
-      </ArticleProvider>
-    </AuthProvider>
+    
+      <AuthProvider>
+        <ArticleProvider>
+          <Router>
+            <AppContent />
+          </Router>
+        </ArticleProvider>
+      </AuthProvider>
+    
   )
 }
 

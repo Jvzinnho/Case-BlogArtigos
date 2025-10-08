@@ -1,30 +1,40 @@
-import React, { createContext, useContext, useState, ReactNode } from 'react';
-import image1 from '../assets/Image1 home.png';
-import image2 from '../assets/image 2 home.png';
+import React, { createContext, useContext, useState, ReactNode, useEffect } from 'react';
+import { articleService, Article as ApiArticle } from '../services/articleService';
+import { authManager } from '../services/authManager';
+import { debugApiResponse, extractArrayFromResponse } from '../utils/debugApi';
+
+
+
 
 export interface Article {
   id: string;
   title: string;
-  image: string;
+  image?: string;
+  banner_url?: string;
   createdAt: string;
-  modifiedAt: string;
-  likes: number;
+  modifiedAt?: string;
+  likes?: number;
   content: string;
   authorId: string;
 }
 
 interface ArticleContextType {
   articles: Article[];
-  addArticle: (article: Omit<Article, 'id' | 'createdAt' | 'modifiedAt' | 'likes'>) => void;
-  updateArticle: (id: string, article: Partial<Article>) => void;
-  deleteArticle: (id: string) => void;
+  loading: boolean;
+  error: string | null;
+  addArticle: (article: Omit<Article, 'id' | 'createdAt' | 'modifiedAt' | 'likes'>) => Promise<void>;
+  updateArticle: (id: string, article: Partial<Article>) => Promise<void>;
+  deleteArticle: (id: string) => Promise<void>;
   getArticleById: (id: string) => Article | undefined;
   getUserArticles: (authorId: string) => Article[];
+  loadArticles: () => Promise<void>;
+  loadUserArticles: (authorId: string) => Promise<void>;
 }
 
 const ArticleContext = createContext<ArticleContextType | undefined>(undefined);
 
-// Artigos iniciais (2 artigos da home)
+
+/*
 const initialArticles: Article[] = [
   {
     id: '1',
@@ -47,47 +57,183 @@ const initialArticles: Article[] = [
     authorId: 'admin'
   }
 ];
+*/
 
-export const ArticleProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const [articles, setArticles] = useState<Article[]>(initialArticles);
 
-  const addArticle = (newArticle: Omit<Article, 'id' | 'createdAt' | 'modifiedAt' | 'likes'>) => {
-    const id = Date.now().toString();
-    const now = new Date().toLocaleDateString('pt-BR', {
+const initialArticles: Article[] = [];
+
+const convertApiArticleToFrontend = (apiArticle: ApiArticle): Article => {
+  return {
+    id: apiArticle.id,
+    title: apiArticle.title,
+    content: apiArticle.content,
+    authorId: apiArticle.author_id,
+    banner_url: apiArticle.banner_url,
+    createdAt: new Date(apiArticle.created_at).toLocaleDateString('pt-BR', {
       year: 'numeric',
       month: 'long',
       day: 'numeric'
-    });
-    
-    const article: Article = {
-      ...newArticle,
-      id,
-      createdAt: now,
-      modifiedAt: now,
-      likes: 0
-    };
-    
-    setArticles(prev => [...prev, article]);
+    }),
+    modifiedAt: apiArticle.updated_at 
+      ? new Date(apiArticle.updated_at).toLocaleDateString('pt-BR', {
+          year: 'numeric',
+          month: 'long',
+          day: 'numeric'
+        })
+      : undefined,
+    likes: 0 // API não tem likes ainda
+  };
+};
+
+export const ArticleProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
+  const [articles, setArticles] = useState<Article[]>(initialArticles);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+
+  console.log('ArticleProvider renderizado, articles:', articles.length, 'loading:', loading, 'error:', error);
+
+
+  const loadArticles = async () => {
+    try {
+      setLoading(true);
+      setError(null);
+      const response = await articleService.getAllArticles();
+      
+
+      debugApiResponse('getAllArticles', response);
+      
+
+      const apiArticles = extractArrayFromResponse(response);
+      
+      const convertedArticles = apiArticles.map(convertApiArticleToFrontend);
+      setArticles(convertedArticles);
+    } catch (error) {
+      console.error('Erro ao carregar artigos:', error);
+      setError('Erro ao carregar artigos');
+
+      setArticles(prev => prev.length > 0 ? prev : []);
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const updateArticle = (id: string, updatedArticle: Partial<Article>) => {
-    setArticles(prev => prev.map(article => 
-      article.id === id 
-        ? { 
-            ...article, 
-            ...updatedArticle, 
-            modifiedAt: new Date().toLocaleDateString('pt-BR', {
-              year: 'numeric',
-              month: 'long',
-              day: 'numeric'
-            })
-          }
-        : article
-    ));
+
+  const loadUserArticles = async (authorId: string) => {
+    try {
+      setLoading(true);
+      setError(null);
+      const response = await articleService.getUserArticles(authorId);
+      
+
+      debugApiResponse('getUserArticles', response);
+      
+
+      const apiArticles = extractArrayFromResponse(response);
+      
+      const convertedArticles = apiArticles.map(convertApiArticleToFrontend);
+      setArticles(convertedArticles);
+    } catch (error) {
+      console.error('Erro ao carregar artigos do usuário:', error);
+      setError('Erro ao carregar artigos do usuário');
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const deleteArticle = (id: string) => {
-    setArticles(prev => prev.filter(article => article.id !== id));
+
+  const addArticle = async (newArticle: Omit<Article, 'id' | 'createdAt' | 'modifiedAt' | 'likes'>) => {
+    try {
+      setLoading(true);
+      setError(null);
+      
+      const userId = authManager.getUserId();
+      if (!userId) {
+        throw new Error('Usuário não autenticado');
+      }
+
+      const apiArticle = await articleService.createArticle({
+        title: newArticle.title,
+        content: newArticle.content,
+        author_id: userId
+      });
+
+      const convertedArticle = convertApiArticleToFrontend(apiArticle);
+      setArticles(prev => [...prev, convertedArticle]);
+    } catch (error) {
+      console.error('Erro ao criar artigo:', error);
+      setError('Erro ao criar artigo');
+      throw error;
+    } finally {
+      setLoading(false);
+    }
+  };
+
+
+  const updateArticle = async (id: string, updatedArticle: Partial<Article>) => {
+    try {
+      setLoading(true);
+      setError(null);
+      
+      const userId = authManager.getUserId();
+      if (!userId) {
+        throw new Error('Usuário não autenticado');
+      }
+
+      await articleService.editArticle({
+        id,
+        title: updatedArticle.title || '',
+        content: updatedArticle.content || '',
+        author_id: userId
+      });
+
+
+      setArticles(prev => prev.map(article => 
+        article.id === id 
+          ? { 
+              ...article, 
+              ...updatedArticle, 
+              modifiedAt: new Date().toLocaleDateString('pt-BR', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+              })
+            }
+          : article
+      ));
+    } catch (error) {
+      console.error('Erro ao atualizar artigo:', error);
+      setError('Erro ao atualizar artigo');
+      throw error;
+    } finally {
+      setLoading(false);
+    }
+  };
+
+
+  const deleteArticle = async (id: string) => {
+    try {
+      setLoading(true);
+      setError(null);
+      
+      const userId = authManager.getUserId();
+      if (!userId) {
+        throw new Error('Usuário não autenticado');
+      }
+
+      await articleService.deleteArticle({
+        id,
+        author_id: userId
+      });
+
+      setArticles(prev => prev.filter(article => article.id !== id));
+    } catch (error) {
+      console.error('Erro ao excluir artigo:', error);
+      setError('Erro ao excluir artigo');
+      throw error;
+    } finally {
+      setLoading(false);
+    }
   };
 
   const getArticleById = (id: string) => {
@@ -101,11 +247,15 @@ export const ArticleProvider: React.FC<{ children: ReactNode }> = ({ children })
   return (
     <ArticleContext.Provider value={{
       articles,
+      loading,
+      error,
       addArticle,
       updateArticle,
       deleteArticle,
       getArticleById,
-      getUserArticles
+      getUserArticles,
+      loadArticles,
+      loadUserArticles
     }}>
       {children}
     </ArticleContext.Provider>

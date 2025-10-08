@@ -95,7 +95,7 @@
   background: #333333;
 }
 
-/* Responsividade */
+
 @media (max-width: 768px) {
   .recover {
     align-items: flex-start;

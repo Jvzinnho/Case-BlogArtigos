@@ -1,98 +1,97 @@
 import React, { createContext, useContext, useState, ReactNode, useEffect } from 'react';
+import { authManager } from '../services/authManager';
+import { userService } from '../services/userService';
+import { useNavigate } from 'react-router-dom'
 
 export interface User {
   id: string;
   email: string;
   name: string;
-  createdAt: string;
+  created_at: string;
 }
 
 interface AuthContextType {
   user: User | null;
   isAuthenticated: boolean;
   login: (email: string, password: string) => Promise<boolean>;
-  register: (email: string, password: string, name: string) => Promise<boolean>;
+  register: (name: string, email: string, password: string) => Promise<boolean>;
+  updateProfile: (profileData: { name?: string; email?: string; password?: string }) => Promise<boolean>;
   logout: () => void;
+  loading: boolean;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-// Mock de usuários para teste
-const mockUsers: (User & { password: string })[] = [
-  {
-    id: '1',
-    email: 'teste@teste.com',
-    password: '123456',
-    name: 'Usuário Teste',
-    createdAt: 'Janeiro 1, 2025'
-  }
-];
-
 export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [loading, setLoading] = useState(true);
 
-  // Verificar se há usuário logado no localStorage
+
   useEffect(() => {
-    const savedUser = localStorage.getItem('user');
-    if (savedUser) {
-      setUser(JSON.parse(savedUser));
-      setIsAuthenticated(true);
-    }
+    const initializeAuth = async () => {
+      const userData = await userService.getProfile(localStorage.getItem('token') || '');
+      if (userData) {
+        setUser(userData);
+        setIsAuthenticated(true);
+      }
+      setLoading(false);
+    };
+
+    if (!user)
+      initializeAuth();
   }, []);
 
   const login = async (email: string, password: string): Promise<boolean> => {
-    // Simular delay de API
-    await new Promise(resolve => setTimeout(resolve, 500));
-    
-    const foundUser = mockUsers.find(u => u.email === email && u.password === password);
-    
-    if (foundUser) {
-      const { password: _, ...userData } = foundUser;
+    try {
+      setLoading(true);
+      const { user: userData, token } = await authManager.login({ email, password });
+      localStorage.setItem('token', token);
       setUser(userData);
       setIsAuthenticated(true);
-      localStorage.setItem('user', JSON.stringify(userData));
       return true;
+    } catch (error) {
+      console.error('Erro no login:', error);
+      return false;
+    } finally {
+      setLoading(false);
     }
-    
-    return false;
   };
 
-  const register = async (email: string, password: string, name: string): Promise<boolean> => {
-    // Simular delay de API
-    await new Promise(resolve => setTimeout(resolve, 500));
-    
-    // Verificar se email já existe
-    const existingUser = mockUsers.find(u => u.email === email);
-    if (existingUser) {
+  const register = async (name: string, email: string, password: string): Promise<boolean> => {
+    try {
+      setLoading(true);
+      const userData = await authManager.register({ name, email, password });
+      setUser(userData);
+      setIsAuthenticated(true);
+      return true;
+    } catch (error) {
+      console.error('Erro no registro:', error);
       return false;
+    } finally {
+      setLoading(false);
     }
-    
-    // Criar novo usuário
-    const newUser: User = {
-      id: Date.now().toString(),
-      email,
-      name,
-      createdAt: new Date().toLocaleDateString('pt-BR', {
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric'
-      })
-    };
-    
-    // Adicionar ao mock de usuários
-    mockUsers.push({ ...newUser, password });
-    
-    setUser(newUser);
-    setIsAuthenticated(true);
-    localStorage.setItem('user', JSON.stringify(newUser));
-    return true;
+  };
+
+  const updateProfile = async (profileData: { name?: string; email?: string; password?: string }): Promise<boolean> => {
+    try {
+      setLoading(true);
+      const userData = await authManager.updateProfile(profileData);
+      setUser(userData);
+      return true;
+    } catch (error) {
+      console.error('Erro ao atualizar perfil:', error);
+      return false;
+    } finally {
+      setLoading(false);
+    }
   };
 
   const logout = () => {
+    authManager.logout();
     setUser(null);
     setIsAuthenticated(false);
-    localStorage.removeItem('user');
+    localStorage.removeItem('token');
   };
 
   return (
@@ -101,7 +100,9 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       isAuthenticated,
       login,
       register,
-      logout
+      updateProfile,
+      logout,
+      loading
     }}>
       {children}
     </AuthContext.Provider>

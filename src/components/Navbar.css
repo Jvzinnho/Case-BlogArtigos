@@ -5,7 +5,8 @@
    right: 0;
    font-family: 'Montserrat', sans-serif;
    background: #ffffff;
-   z-index: 1000;
+   z-index: 9999;
+   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
  }
 
  .navbar-card {
@@ -134,5 +135,54 @@
    background-color: #fef2f2;
    color: #b91c1c;
  }
+
+
+@media (max-width: 768px) {
+  .navbar-card {
+    padding: 12px 16px;
+  }
+  
+  .navbar-card-left {
+    gap: 12px;
+  }
+  
+  .navbar-link {
+    font-size: 14px;
+  }
+  
+  .navbar-user-name {
+    font-size: 12px;
+    margin-right: 8px;
+  }
+  
+  .navbar-avatar {
+    width: 28px;
+    height: 28px;
+  }
+}
+
+@media (max-width: 480px) {
+  .navbar-card {
+    padding: 10px 12px;
+  }
+  
+  .navbar-card-left {
+    gap: 8px;
+  }
+  
+  .navbar-link {
+    font-size: 13px;
+  }
+  
+  .navbar-user-name {
+    font-size: 11px;
+    margin-right: 6px;
+  }
+  
+  .navbar-avatar {
+    width: 24px;
+    height: 24px;
+  }
+}
 
 

@@ -1,21 +1,29 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useArticles, Article } from '../../context/ArticleContext';
 import { useAuth } from '../../context/AuthContext';
 import './MyArticle.css';
+import { formatImageUrl } from '../../utils/FormatImageUrl';
 
 const MyArticle: React.FC = () => {
   const navigate = useNavigate();
-  const { getUserArticles, deleteArticle } = useArticles();
+  const { getUserArticles, deleteArticle, loadUserArticles, loading, error } = useArticles();
   const { user } = useAuth();
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [articleToDelete, setArticleToDelete] = useState<Article | null>(null);
+  const [userArticles, setUserArticles] = useState<Article[]>([]);
   
-  // Pegar apenas os artigos do usuário logado
-  const userArticles = user ? getUserArticles(user.id) : [];
+
+  useEffect(() => {
+    if (user) {
+      loadUserArticles(user.id).then(() => {
+        setUserArticles(getUserArticles(user.id));
+      });
+    }
+  }, [user?.id]); // Apenas user.id como dependência
 
   const handleEdit = (article: Article) => {
-    // Navegar para a página de edição com os dados do artigo
+
     navigate('/new-article', { 
       state: { 
         editMode: true, 
@@ -29,11 +37,18 @@ const MyArticle: React.FC = () => {
     setShowDeleteModal(true);
   };
 
-  const handleConfirmDelete = () => {
+  const handleConfirmDelete = async () => {
     if (articleToDelete) {
-      deleteArticle(articleToDelete.id);
-      setShowDeleteModal(false);
-      setArticleToDelete(null);
+      try {
+        await deleteArticle(articleToDelete.id);
+
+        setUserArticles(prev => prev.filter(article => article.id !== articleToDelete.id));
+        setShowDeleteModal(false);
+        setArticleToDelete(null);
+      } catch (error) {
+        console.error('Erro ao excluir artigo:', error);
+        alert('Erro ao excluir artigo. Tente novamente.');
+      }
     }
   };
 
@@ -51,8 +66,35 @@ const MyArticle: React.FC = () => {
       <div className="my-articles-container">
         <h1 className="my-articles-title">Meus Artigos</h1>
         
-        <div className="articles-list">
-          {userArticles.length === 0 ? (
+        {loading && (
+          <div style={{ textAlign: 'center', padding: '40px' }}>
+            <p>Carregando artigos...</p>
+          </div>
+        )}
+        
+        {error && (
+          <div style={{ textAlign: 'center', padding: '40px', color: 'red' }}>
+            <p>Erro ao carregar artigos: {error}</p>
+            <button 
+              onClick={() => user && loadUserArticles(user.id)}
+              style={{
+                marginTop: '16px',
+                padding: '8px 16px',
+                backgroundColor: '#000',
+                color: '#fff',
+                border: 'none',
+                borderRadius: '4px',
+                cursor: 'pointer'
+              }}
+            >
+              Tentar Novamente
+            </button>
+          </div>
+        )}
+        
+        {!loading && !error && (
+          <div className="articles-list">
+            {userArticles.length === 0 ? (
             <div style={{ textAlign: 'center', padding: '40px', color: '#64748b' }}>
               <p>Você ainda não criou nenhum artigo.</p>
               <button 
@@ -75,7 +117,10 @@ const MyArticle: React.FC = () => {
             <div key={article.id} className="article-card">
               <div className="article-content" onClick={() => handleArticleClick(article)} style={{ cursor: 'pointer' }}>
                 <div className="article-image">
-                  <img src={article.image} alt={article.title} />
+                  <img 
+                    src={formatImageUrl(article.banner_url || '')} 
+                    alt={article.title} 
+                  />
                 </div>
                 
                 <div className="article-info">
@@ -121,7 +166,8 @@ const MyArticle: React.FC = () => {
             </div>
             ))
           )}
-        </div>
+          </div>
+        )}
       </div>
 
       {/* Modal de Confirmação de Exclusão */}

@@ -24,7 +24,7 @@
   color: #374151;
 }
 
-/* Layout sem card, igual ao Home */
+
 .article-item {
   background: transparent;
   margin-bottom: 40px;
@@ -149,7 +149,7 @@
   background: #2563eb;
 }
 
-/* Responsividade */
+
 @media (max-width: 768px) {
   .article-view {
     padding: 80px 16px 20px 16px;

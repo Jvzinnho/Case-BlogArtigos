@@ -2,7 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useArticles, Article } from '../../context/ArticleContext';
 import { useAuth } from '../../context/AuthContext';
+import { articleService } from '../../services/articleService';
+import { validateImage, createImagePreview, formatFileSize } from '../../utils/imageValidation';
 import './NewArticle.css';
+import { formatImageUrl } from '../../utils/FormatImageUrl';
 
 const NewArticle = () => {
   const location = useLocation();
@@ -14,10 +17,11 @@ const NewArticle = () => {
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
   const [imageFile, setImageFile] = useState<File | null>(null);
-  const [imageNameInput, setImageNameInput] = useState('');
-  const [imageUrl, setImageUrl] = useState('');
+  const [imagePreview, setImagePreview] = useState<string>('');
+  const [imageError, setImageError] = useState<string>('');
+  const [isLoading, setIsLoading] = useState(false);
 
-  // Verificar se está em modo de edição
+
   useEffect(() => {
     if (location.state) {
       const { editMode: isEditMode, articleData } = location.state as { 
@@ -30,51 +34,93 @@ const NewArticle = () => {
         setArticleId(articleData.id);
         setTitle(articleData.title);
         setContent(articleData.content);
-        setImageNameInput(articleData.image);
-        setImageUrl(articleData.image);
+        if (articleData.banner_url) {
+          setImagePreview(formatImageUrl(articleData.banner_url || ''));
+        }
       }
     }
   }, [location.state]);
 
-  const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleImageUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
+
+      const validation = validateImage(file);
+      if (!validation.isValid) {
+        setImageError(validation.error || 'Erro na validação');
+        return;
+      }
+      
+      setImageError('');
       setImageFile(file);
-      setImageNameInput(file.name);
+      
+
+      try {
+        const preview = await createImagePreview(file);
+        setImagePreview(preview);
+      } catch (error) {
+        setImageError('Erro ao processar imagem');
+      }
     }
   };
 
-  const handleSave = () => {
+  const handleSave = async () => {
     if (!title.trim() || !content.trim()) {
       alert('Por favor, preencha o título e o conteúdo do artigo.');
       return;
     }
 
-    const imageToUse = imageFile ? URL.createObjectURL(imageFile) : imageUrl;
+    if (!user) {
+      alert('Você precisa estar logado para criar um artigo.');
+      navigate('/login');
+      return;
+    }
 
-    if (editMode && articleId) {
-      // Atualizar artigo existente
-      updateArticle(articleId, {
-        title: title.trim(),
-        content: content.trim(),
-        image: imageToUse
-      });
-      navigate('/meus-artigos');
-    } else {
-      // Criar novo artigo
-      if (!user) {
-        alert('Você precisa estar logado para criar um artigo.');
-        navigate('/login');
-        return;
+    if (content.length < 51) {
+      alert('O conteúdo do artigo deve ter pelo menos 50 caracteres.');
+      return;
+    }
+
+    setIsLoading(true);
+
+    try {
+      if (editMode && articleId) {
+
+        const updatedArticle = await articleService.editArticle({
+          id: articleId,
+          title: title.trim(),
+          content: content.trim(),
+          author_id: user.id
+        }, imageFile || undefined);
+        
+        await updateArticle(articleId, {
+          title: updatedArticle.title,
+          content: updatedArticle.content,
+          image: updatedArticle.banner_url || ''
+        });
+      } else {
+
+        const newArticle = await articleService.createArticle({
+          title: title.trim(),
+          content: content.trim(),
+          author_id: user.id
+        }, imageFile || undefined);
+        
+        await addArticle({
+          title: newArticle.title,
+          content: newArticle.content,
+          image: newArticle.banner_url || '',
+          authorId: user.id
+        });
       }
-      
-      addArticle({
-        title: title.trim(),
-        content: content.trim(),
-        image: imageToUse,
-        authorId: user.id
-      });
-      navigate('/meus-artigos');
+      setTimeout(() => {
+        window.location.href = '/meus-artigos'
+      }, 1000);
+    } catch (error) {
+      console.error('Erro ao salvar artigo:', error);
+      alert('Erro ao salvar artigo. Tente novamente.');
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -96,25 +142,24 @@ const NewArticle = () => {
                 className="image-upload-input"
               />
               <label htmlFor="image-upload" className="image-upload-label">
-                {imageFile ? (
+                {imagePreview ? (
                   <div className="image-preview">
                     <img 
-                      src={URL.createObjectURL(imageFile)} 
+                      src={imagePreview} 
                       alt="Preview" 
                       className="preview-image"
                     />
-                  </div>
-                ) : imageUrl ? (
-                  <div className="image-preview">
-                    <img 
-                      src={imageUrl} 
-                      alt="Preview" 
-                      className="preview-image"
-                    />
+                    {imageFile && (
+                      <div className="image-info">
+                        <span className="image-name">{imageFile.name}</span>
+                        <span className="image-size">({formatFileSize(imageFile.size)})</span>
+                      </div>
+                    )}
                   </div>
                 ) : (
                   <div className="upload-placeholder">
                     <span>+</span>
+                    <p>Clique para adicionar uma imagem</p>
                   </div>
                 )}
               </label>
@@ -123,15 +168,14 @@ const NewArticle = () => {
           
           <div className="banner-info">
             <h3 className="banner-title">Banner</h3>
-            <input
-              type="text"
-              className="image-name-input"
-              value={imageNameInput}
-              onChange={(e) => setImageNameInput(e.target.value)}
-              placeholder="Adicione uma imagem"
-              onClick={() => document.getElementById('image-upload')?.click()}
-              readOnly
-            />
+            {imageError && (
+              <div className="image-error">
+                {imageError}
+              </div>
+            )}
+            <div className="image-upload-hint">
+              Formatos aceitos: JPG, PNG, GIF, WebP (máx. 5MB)
+            </div>
           </div>
         </div>
 
@@ -166,8 +210,9 @@ const NewArticle = () => {
             <button 
               className="save-button"
               onClick={handleSave}
+              disabled={isLoading}
             >
-              {editMode ? 'Atualizar' : 'Salvar'}
+              {isLoading ? 'Salvando...' : (editMode ? 'Atualizar' : 'Salvar')}
             </button>
           </div>
         </div>

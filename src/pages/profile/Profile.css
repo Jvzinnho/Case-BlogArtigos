@@ -108,7 +108,7 @@
   background: #333333;
 }
 
-/* Responsividade */
+
 @media (max-width: 768px) {
   .profile-form-row {
     grid-template-columns: 1fr;
